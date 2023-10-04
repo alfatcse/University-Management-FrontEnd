@@ -4,9 +4,11 @@ import { Breadcrumb, Layout, Menu, theme } from "antd";
 const { Header, Content, Footer, Sider } = Layout;
 import { sidebarItems } from "@/constants/sidebaritems";
 import { USER_ROLE } from "@/constants/role";
+import { getUserInfo } from "@/services/auth.service";
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const role = USER_ROLE.ADMIN;
+  // const role = USER_ROLE.ADMIN;
+  const { role } = getUserInfo() as any;
   return (
     <Sider
       collapsible
@@ -32,7 +34,7 @@ const Sidebar = () => {
         }}
         className="demo-logo-vertical"
       >
-        PH-University
+        UMS
       </div>
       <Menu
         theme="dark"
