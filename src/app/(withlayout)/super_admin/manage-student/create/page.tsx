@@ -1,6 +1,6 @@
 "use client";
 import StepperForm from "@/components/StepperForm/StepperForm";
-import GuardianInfo from "@/components/StudentForms/Guardianinfo";
+import GuardianInfo from "@/components/StudentForms/GuardianInfo";
 import LocalGuardianInfo from "@/components/StudentForms/LocalGuardianInfo";
 import StudentBasicInfo from "@/components/StudentForms/StudentBasicInfo";
 import StudentInfo from "@/components/StudentForms/StudentInfo";
