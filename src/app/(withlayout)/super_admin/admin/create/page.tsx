@@ -1,5 +1,6 @@
 "use client";
 import Form from "@/components/Forms/Form";
+import FormDatePicker from "@/components/Forms/FormDatePicker";
 import FormTextArea from "@/components/Forms/FormTextArea";
 import FromInput from "@/components/Forms/FromInput";
 import FromSelectField from "@/components/Forms/FromSelectField";
@@ -206,6 +207,19 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
+                <FormDatePicker
+                  name="admin.dateOfBirth"
+                  label="Date of Birth"
+                  size="large"
+                />
+              </Col>
+              <Col
+                className="gutter-row"
+                span={8}
+                style={{
+                  marginBottom: "10px",
+                }}
+              >
                 <FromInput
                   type="text"
                   name="admin.emergencyContactNo"
@@ -227,21 +241,7 @@ const CreateAdminPage = () => {
                   label="Designation"
                 />
               </Col>
-              <Col
-                className="gutter-row"
-                span={8}
-                style={{
-                  marginBottom: "10px",
-                }}
-              >
-                <FromSelectField
-                  size="large"
-                  name="admin.managementDepartment"
-                  options={BloodGroup}
-                  label="Blood Group"
-                  placeholder="Select"
-                />
-              </Col>
+
               <Col
                 className="gutter-row"
                 span={8}

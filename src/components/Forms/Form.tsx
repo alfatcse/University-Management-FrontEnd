@@ -15,7 +15,7 @@ const Form = ({ children, SubmitHandler, defaultValues }: FromProps) => {
   }
   const methods = useForm<FromProps>(formConfig);
   const { handleSubmit, reset } = methods;
-  const onSubmit = (data) => {
+  const onSubmit = (data: any) => {
     SubmitHandler(data);
     reset();
   };

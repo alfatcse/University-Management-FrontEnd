@@ -1,32 +1,39 @@
-import { Input } from "antd";
+import { DatePicker, DatePickerProps, Input } from "antd";
 import { Controller, useFormContext } from "react-hook-form";
-type TextAreaProps = {
+import dayjs, { Dayjs } from "dayjs";
+type UMDatePikerProps = {
   name: string;
   label?: string;
-  rows?: number;
-  value?: string;
+  value?: Dayjs;
   placeholder?: string;
+  onChange?: (valOne: null | Dayjs, valTwo: string) => void;
+  size?: "large" | "small";
 };
 const FormDatePicker = ({
   name,
   label,
-  rows,
-  value,
   placeholder,
-}: TextAreaProps) => {
-  const { control } = useFormContext();
+  onChange,
+  size,
+}: UMDatePikerProps) => {
+  const { control, setValue } = useFormContext();
+  const HandleOnChange: DatePickerProps["onChange"] = (date, dateString) => {
+    onChange ? onChange(date, dateString) : null;
+    setValue(name, dateString);
+  };
   return (
-    <div className={`flex flex-col  w-full`}>
+    <div>
       {label ? label : null}
+      <br />
       <Controller
         name={name}
         control={control}
         render={({ field }) => (
-          <Input.TextArea
-            rows={rows}
-            placeholder={placeholder}
-            {...field}
-            defaultValue={value}
+          <DatePicker
+            value={dayjs(field.value) || ""}
+            size={size}
+            onChange={HandleOnChange}
+            style={{ width: "100%" }}
           />
         )}
       />
