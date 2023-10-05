@@ -5,6 +5,7 @@ import LocalGuardianInfo from "@/components/StudentForms/LocalGuardianInfo";
 import StudentBasicInfo from "@/components/StudentForms/StudentBasicInfo";
 import StudentInfo from "@/components/StudentForms/StudentInfo";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
+import { error } from "console";
 import React from "react";
 const steps = [
   {
@@ -25,6 +26,13 @@ const steps = [
   },
 ];
 const CreateStudentPage = () => {
+  const handleStudentSubmit = async (data: any) => {
+    try {
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div>
       <UMBreadCrumb
@@ -37,10 +45,17 @@ const CreateStudentPage = () => {
             label: "manage-student",
             link: "/super_admin/manage-student",
           },
+          {
+            label: "create-student",
+            link: "/super_admin/manage-student/create",
+          },
         ]}
       />
       <h1>Create Student</h1>
-      <StepperForm steps={steps} />
+      <StepperForm
+        submitHandler={(value) => handleStudentSubmit(value)}
+        steps={steps}
+      />
     </div>
   );
 };
