@@ -9,6 +9,7 @@ interface IInput {
   validation?: object;
   label?: string;
 }
+import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 import { Input } from "antd";
 import { Controller, useFormContext } from "react-hook-form";
 const FromInput = ({
@@ -21,7 +22,11 @@ const FromInput = ({
   validation,
   label,
 }: IInput) => {
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const errorMessage = getErrorMessageByPropertyName(errors, name);
   return (
     <>
       {label ? label : null}
@@ -48,6 +53,13 @@ const FromInput = ({
           )
         }
       />
+      <small
+        style={{
+          color: "red",
+        }}
+      >
+        {errorMessage}
+      </small>
     </>
   );
 };
