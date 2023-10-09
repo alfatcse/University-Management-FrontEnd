@@ -1,8 +1,11 @@
 "use client";
-import { useDepartmentsQuery } from "@/app/redux/api/departmentApi";
+import {
+  useDeleteDepartmentMutation,
+  useDepartmentsQuery,
+} from "@/app/redux/api/departmentApi";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import UMTable from "@/components/ui/UMTable";
-import { Button, Input } from "antd";
+import { Button, Input, message } from "antd";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -13,9 +16,10 @@ import {
 } from "@ant-design/icons";
 import ActionBar from "@/components/ui/ActionBar";
 import { useDebounced } from "@/app/redux/hooks";
+import dayjs from "dayjs";
 const ManageDepartmentPage = () => {
   const query: Record<string, any> = {};
-  const [size, setSize] = useState<number>(10);
+  const [size, setSize] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
   const [sortBy, setSortBy] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<string>("");
@@ -24,14 +28,31 @@ const ManageDepartmentPage = () => {
   query["page"] = page;
   query["sortBy"] = sortBy;
   query["sortOrder"] = sortOrder;
-  query["searchTerm"] = searchTerm;
+  //query["searchTerm"] = searchTerm;
   const debouncedTerm = useDebounced({
     searchQuery: searchTerm,
     delay: 600,
   });
+  if (!!debouncedTerm) {
+    query["searchTerm"] = debouncedTerm;
+  }
   const { data, isLoading } = useDepartmentsQuery({ ...query });
+  const [deleteDepartment] = useDeleteDepartmentMutation();
   const departments = data?.departments;
   const meta = data?.meta;
+  const deleteHandler = async (id: string) => {
+    console.log(id);
+    message.loading("Deleting.....");
+    try {
+      const result = await deleteDepartment(id);
+      if (result) {
+        message.success("Department Deleted Successfully");
+      }
+    } catch (err: any) {
+      console.error(err.message);
+      message.error("Something went Wrong!", err.message);
+    }
+  };
   const columns = [
     {
       title: "Title",
@@ -41,7 +62,10 @@ const ManageDepartmentPage = () => {
     {
       title: "CreatedAt",
       dataIndex: "createdAt",
-      key: "age",
+      render: function (data: any) {
+        return data && dayjs(data).format("MMM D, YYYY hh:mm A");
+      },
+
       sorter: true,
     },
     {
@@ -49,17 +73,20 @@ const ManageDepartmentPage = () => {
       render: function (data: any) {
         return (
           <>
-            <Button onClick={() => console.log(data)} type="primary">
-              <EditOutlined />
-            </Button>
+            <Link href={`/super_admin/department/edit/${data?.id}`}>
+              <Button
+                style={{ margin: "0px 5px" }}
+                onClick={() => console.log(data)}
+                type="primary"
+              >
+                <EditOutlined />
+              </Button>
+            </Link>
             <Button
-              style={{ margin: "0px 5px" }}
-              onClick={() => console.log(data)}
+              onClick={() => deleteHandler(data?.id)}
               type="primary"
+              danger
             >
-              <EyeOutlined />
-            </Button>
-            <Button onClick={() => console.log(data)} type="primary" danger>
               <DeleteOutlined />
             </Button>
           </>
