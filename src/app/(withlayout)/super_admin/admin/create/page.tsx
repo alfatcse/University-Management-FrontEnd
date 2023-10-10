@@ -1,27 +1,51 @@
 "use client";
 import Form from "@/components/Forms/Form";
 import FormDatePicker from "@/components/Forms/FormDatePicker";
+import FormInput from "@/components/Forms/FromInput";
+import FormSelectField from "@/components/Forms/FromSelectField";
 import FormTextArea from "@/components/Forms/FormTextArea";
-import FromInput from "@/components/Forms/FromInput";
-import FromSelectField from "@/components/Forms/FromSelectField";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import UploadImage from "@/components/ui/UploadImage";
-import {
-  BloodGroup,
-  departmentOptions,
-  genderOptions,
-} from "@/constants/global";
+import { BloodGroup, genderOptions } from "@/constants/global";
 import { adminSchema } from "@/schemas/admin";
+import { IDepartment } from "@/types";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Col, Row } from "antd";
+import { Button, Col, Row, message } from "antd";
+import { useAddAdminWithFormDataMutation } from "@/app/redux/api/adminApi";
+import { useDepartmentsQuery } from "@/app/redux/api/departmentApi";
 const CreateAdminPage = () => {
-  const onSubmit = async (data: any) => {
+  const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
+  const [addAdminWithFormData] = useAddAdminWithFormDataMutation();
+  //@ts-ignore
+  const departments: IDepartment[] = data?.departments;
+  const departmentOptions =
+    departments &&
+    departments?.map((department) => {
+      return {
+        label: department?.title,
+        value: department?.id,
+      };
+    });
+
+  const onSubmit = async (values: any) => {
+    console.log(values);
+    const obj = { ...values };
+    const file = obj["file"];
+    delete obj["file"];
+    const data = JSON.stringify(obj);
+    const formData = new FormData();
+    formData.append("file", file as Blob);
+    formData.append("data", data);
+    message.loading("Creating...");
     try {
-      console.log(data);
+      const result = await addAdminWithFormData(formData);
+      console.log(result);
+      message.success("Admin created successfully!");
     } catch (err: any) {
-      console.error(err);
+      console.error(err.message);
     }
   };
+
   return (
     <div>
       <UMBreadCrumb
@@ -36,12 +60,13 @@ const CreateAdminPage = () => {
           },
         ]}
       />
-      <h1>Crate Admin</h1>
+      <h1>Create Admin</h1>
+
       <div>
         <Form SubmitHandler={onSubmit} resolver={yupResolver(adminSchema)}>
           <div
             style={{
-              border: "1px solid ",
+              border: "1px solid #d9d9d9",
               borderRadius: "5px",
               padding: "15px",
               marginBottom: "10px",
@@ -50,11 +75,10 @@ const CreateAdminPage = () => {
             <p
               style={{
                 fontSize: "18px",
-                marginBottom: "10px Opx",
+                marginBottom: "10px",
               }}
             >
-              {" "}
-              Basic Information
+              Admin Information
             </p>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               <Col
@@ -64,7 +88,7 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromInput
+                <FormInput
                   type="text"
                   name="admin.name.firstName"
                   size="large"
@@ -78,7 +102,7 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromInput
+                <FormInput
                   type="text"
                   name="admin.name.middleName"
                   size="large"
@@ -92,7 +116,7 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromInput
+                <FormInput
                   type="text"
                   name="admin.name.lastName"
                   size="large"
@@ -106,7 +130,7 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromInput
+                <FormInput
                   type="password"
                   name="password"
                   size="large"
@@ -120,7 +144,7 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromSelectField
+                <FormSelectField
                   size="large"
                   name="admin.gender"
                   options={genderOptions}
@@ -135,11 +159,11 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromSelectField
+                <FormSelectField
                   size="large"
                   name="admin.managementDepartment"
                   options={departmentOptions}
-                  label="Department "
+                  label="Department"
                   placeholder="Select"
                 />
               </Col>
@@ -150,13 +174,15 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <UploadImage />
+                <UploadImage name="file" />
               </Col>
             </Row>
           </div>
+
+          {/* basic info */}
           <div
             style={{
-              border: "1px solid ",
+              border: "1px solid #d9d9d9",
               borderRadius: "5px",
               padding: "15px",
               marginBottom: "10px",
@@ -165,13 +191,11 @@ const CreateAdminPage = () => {
             <p
               style={{
                 fontSize: "18px",
-                marginBottom: "10px Opx",
+                marginBottom: "10px",
               }}
             >
-              {" "}
-              Contact Information
+              Basic Information
             </p>
-            {/* Contact Info */}
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               <Col
                 className="gutter-row"
@@ -180,12 +204,11 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromInput
+                <FormInput
                   type="email"
-                  name="admin.name.email"
+                  name="admin.email"
                   size="large"
-                  label="Email"
-                  placeholder="jone-Done@example.com"
+                  label="Email address"
                 />
               </Col>
               <Col
@@ -195,11 +218,25 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromInput
+                <FormInput
                   type="text"
                   name="admin.contactNo"
                   size="large"
-                  label="Contact Number"
+                  label="Contact No."
+                />
+              </Col>
+              <Col
+                className="gutter-row"
+                span={8}
+                style={{
+                  marginBottom: "10px",
+                }}
+              >
+                <FormInput
+                  type="text"
+                  name="admin.emergencyContactNo"
+                  size="large"
+                  label="Emergency Contact No."
                 />
               </Col>
               <Col
@@ -211,7 +248,7 @@ const CreateAdminPage = () => {
               >
                 <FormDatePicker
                   name="admin.dateOfBirth"
-                  label="Date of Birth"
+                  label="Date of birth"
                   size="large"
                 />
               </Col>
@@ -222,11 +259,12 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromInput
-                  type="text"
-                  name="admin.emergencyContactNo"
+                <FormSelectField
                   size="large"
-                  label="Emergency Contact Number"
+                  name="admin.bloodGroup"
+                  options={BloodGroup}
+                  label="Blood group"
+                  placeholder="Select"
                 />
               </Col>
               <Col
@@ -236,27 +274,11 @@ const CreateAdminPage = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FromInput
+                <FormInput
                   type="text"
                   name="admin.designation"
                   size="large"
                   label="Designation"
-                />
-              </Col>
-
-              <Col
-                className="gutter-row"
-                span={8}
-                style={{
-                  marginBottom: "10px",
-                }}
-              >
-                <FromSelectField
-                  size="large"
-                  name="admin.managementDepartment"
-                  options={BloodGroup}
-                  label="Blood Group"
-                  placeholder="Select"
                 />
               </Col>
               <Col span={12} style={{ margin: "10px 0" }}>
@@ -266,6 +288,7 @@ const CreateAdminPage = () => {
                   rows={4}
                 />
               </Col>
+
               <Col span={12} style={{ margin: "10px 0" }}>
                 <FormTextArea
                   name="admin.permanentAddress"
