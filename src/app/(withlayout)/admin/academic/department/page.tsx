@@ -6,29 +6,24 @@ import {
 } from "@ant-design/icons";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import UMTable from "@/components/ui/UMTable";
-
 import { Button, Input, message } from "antd";
 import Link from "next/link";
 import { useState } from "react";
 import ActionBar from "@/components/ui/ActionBar";
-
 import dayjs from "dayjs";
 import { useDebounced } from "@/app/redux/hooks";
 import {
   useAcademicDepartmentsQuery,
   useDeleteAcademicDepartmentMutation,
 } from "@/app/redux/api/academic/departmentApi";
-
 const ACDepartmentPage = () => {
   const query: Record<string, any> = {};
-
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [sortBy, setSortBy] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [deleteAcademicDepartment] = useDeleteAcademicDepartmentMutation();
-
   query["limit"] = size;
   query["page"] = page;
   query["sortBy"] = sortBy;
@@ -44,7 +39,6 @@ const ACDepartmentPage = () => {
   const { data, isLoading } = useAcademicDepartmentsQuery({ ...query });
   const academicDepartments = data?.academicDepartments;
   const meta = data?.meta;
-
   const deleteHandler = async (id: string) => {
     message.loading("Deleting.....");
     try {
@@ -58,7 +52,6 @@ const ACDepartmentPage = () => {
       message.error(err.message);
     }
   };
-
   const columns = [
     {
       title: "Title",
@@ -107,7 +100,6 @@ const ACDepartmentPage = () => {
       },
     },
   ];
-
   const onPaginationChange = (page: number, pageSize: number) => {
     console.log("Page:", page, "PageSize:", pageSize);
     setPage(page);
@@ -119,13 +111,11 @@ const ACDepartmentPage = () => {
     setSortBy(field as string);
     setSortOrder(order === "ascend" ? "asc" : "desc");
   };
-
   const resetFilters = () => {
     setSortBy("");
     setSortOrder("");
     setSearchTerm("");
   };
-
   return (
     <div>
       <UMBreadCrumb

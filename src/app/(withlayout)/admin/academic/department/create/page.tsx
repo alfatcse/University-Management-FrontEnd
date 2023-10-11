@@ -21,7 +21,6 @@ const CreateACDepartmentPage = () => {
       value: faculty?.id,
     };
   });
-
   const onSubmit = async (data: any) => {
     message.loading("Creating.....");
     try {
