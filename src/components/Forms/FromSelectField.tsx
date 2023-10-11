@@ -1,8 +1,9 @@
 "use client";
-type SelectOptions = {
+export type SelectOptions = {
   label: string;
   value: string;
 };
+
 type SelectFieldProps = {
   options: SelectOptions[];
   name: string;

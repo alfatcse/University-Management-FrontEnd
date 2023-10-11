@@ -1,7 +1,9 @@
 import { IAcademicFaculty, IMeta } from "@/types";
 import { baseApi } from "../baseApi";
 import { tagTypes } from "../../tag-types";
+import { getUserInfo } from "@/services/auth.service";
 const ACADEMIC_FACULTY_URL = "/academic-faculties";
+const auth = getUserInfo();
 export const academicFacultyApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // get all academic faculties api endpoint
@@ -35,6 +37,9 @@ export const academicFacultyApi = baseApi.injectEndpoints({
         url: ACADEMIC_FACULTY_URL,
         method: "POST",
         data,
+        headers: {
+          authorization: auth, // Include the authorization token in the header
+        },
       }),
       invalidatesTags: [tagTypes.academicFaculty],
     }),

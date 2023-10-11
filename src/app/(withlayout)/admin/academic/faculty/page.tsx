@@ -13,6 +13,7 @@ import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import ActionBar from "@/components/ui/ActionBar";
 import UMTable from "@/components/ui/UMTable";
 import { number } from "yup";
+import { useAcademicFacultiesQuery } from "@/app/redux/api/academic/facultyApi";
 const ACFacultyPage = () => {
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
@@ -28,11 +29,10 @@ const ACFacultyPage = () => {
     searchQuery: searchTerm,
     delay: 600,
   });
-  const academicFaculties: any = [];
-  const meta = {
-    total: 20,
-  };
-  const isLoading = false;
+
+  const { data, isLoading } = useAcademicFacultiesQuery({ ...query });
+  const academicFaculties = data?.academicFaculties;
+  const meta = data?.meta;
   if (!!debouncedTerm) {
     query["searchTerm"] = debouncedTerm;
   }

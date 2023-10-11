@@ -4,7 +4,6 @@ import Form from "@/components/Forms/Form";
 import FromInput from "@/components/Forms/FromInput";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import { Button, Col, Row, message } from "antd";
-
 const CreateFacultyPage = () => {
   const [addAcademicFaculty] = useAddAcademicFacultyMutation();
   const onSubmit = async (data: any) => {
