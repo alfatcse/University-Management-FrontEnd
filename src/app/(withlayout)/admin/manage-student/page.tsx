@@ -10,13 +10,11 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
-
 import UMTable from "@/components/ui/UMTable";
 import { IDepartment } from "@/types";
 import dayjs from "dayjs";
 import { useDebounced } from "@/app/redux/hooks";
 import { useStudentsQuery } from "@/app/redux/api/studentApi";
-
 const StudentPage = () => {
   const query: Record<string, any> = {};
 

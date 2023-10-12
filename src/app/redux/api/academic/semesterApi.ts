@@ -1,7 +1,9 @@
 import { IAcademicSemester, IMeta } from "@/types";
 import { baseApi } from "../baseApi";
 import { tagTypes } from "../../tag-types";
+import { getUserInfo } from "@/services/auth.service";
 const ACADEMIC_SEMESTER_URL = "/academic-semesters";
+const auth = getUserInfo();
 export const academicSemesterApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // create ac semester endpoint
@@ -10,10 +12,12 @@ export const academicSemesterApi = baseApi.injectEndpoints({
         url: ACADEMIC_SEMESTER_URL,
         method: "POST",
         data,
+        headers: {
+          authorization: auth, // Include the authorization token in the header
+        },
       }),
       invalidatesTags: [tagTypes.academicSemester],
     }),
-
     // get all ac semesters endpoint
     academicSemesters: build.query({
       query: (arg: Record<string, any>) => {

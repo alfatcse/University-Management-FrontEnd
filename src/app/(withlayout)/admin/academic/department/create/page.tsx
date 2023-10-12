@@ -40,7 +40,7 @@ const CreateACDepartmentPage = () => {
       <UMBreadCrumb
         items={[
           { label: `${base}`, link: `/${base}` },
-          { label: "academic", link: `/${base}/academic` },
+          //   { label: "academic", link: `/${base}/academic` },
           { label: "department", link: `/${base}/academic/department` },
         ]}
       />

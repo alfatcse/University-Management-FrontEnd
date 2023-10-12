@@ -26,7 +26,7 @@ const beforeUpload = (file: RcFile) => {
 type ImageUploadProps = {
   name: string;
 };
-const UploadImage: React.FC = ({ name }: ImageUploadProps) => {
+const UploadImage = ({ name }: ImageUploadProps) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>();
   const { setValue } = useFormContext();

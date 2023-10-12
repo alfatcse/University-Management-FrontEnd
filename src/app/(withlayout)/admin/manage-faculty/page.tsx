@@ -10,22 +10,18 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
-
 import UMTable from "@/components/ui/UMTable";
 import { IDepartment } from "@/types";
 import dayjs from "dayjs";
 import { useDebounced } from "@/app/redux/hooks";
-import { useStudentsQuery } from "@/app/redux/api/studentApi";
-
-const StudentPage = () => {
+import { useFacultiesQuery } from "@/app/redux/api/facultyApi";
+const FacultyPage = () => {
   const query: Record<string, any> = {};
-
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [sortBy, setSortBy] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
-
   query["limit"] = size;
   query["page"] = page;
   query["sortBy"] = sortBy;
@@ -39,16 +35,16 @@ const StudentPage = () => {
   if (!!debouncedSearchTerm) {
     query["searchTerm"] = debouncedSearchTerm;
   }
-  const { data, isLoading } = useStudentsQuery({ ...query });
-
-  const students = data?.students;
+  const { data, isLoading } = useFacultiesQuery({ ...query });
+  console.log(data);
+  const faculties = data?.faculties;
   const meta = data?.meta;
-  // console.log(students);
+  console.log(faculties);
 
   const columns = [
     {
       title: "Id",
-      dataIndex: "studentId",
+      dataIndex: "facultyId",
       sorter: true,
     },
     {
@@ -63,6 +59,17 @@ const StudentPage = () => {
       dataIndex: "email",
     },
     {
+      title: "Department",
+      dataIndex: "academicDepartment",
+      render: function (data: IDepartment) {
+        return <>{data?.title}</>;
+      },
+    },
+    {
+      title: "Designation",
+      dataIndex: "designation",
+    },
+    {
       title: "Created at",
       dataIndex: "createdAt",
       render: function (data: any) {
@@ -73,11 +80,6 @@ const StudentPage = () => {
     {
       title: "Contact no.",
       dataIndex: "contactNo",
-    },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      sorter: true,
     },
     {
       title: "Action",
@@ -136,7 +138,7 @@ const StudentPage = () => {
           },
         ]}
       />
-      <ActionBar title="Student List">
+      <ActionBar title="Faculty List">
         <Input
           size="large"
           placeholder="Search"
@@ -146,7 +148,7 @@ const StudentPage = () => {
           }}
         />
         <div>
-          <Link href="/admin/manage-student/create">
+          <Link href="/admin/manage-faculty/create">
             <Button type="primary">Create</Button>
           </Link>
           {(!!sortBy || !!sortOrder || !!searchTerm) && (
@@ -164,7 +166,7 @@ const StudentPage = () => {
       <UMTable
         loading={isLoading}
         columns={columns}
-        dataSource={students}
+        dataSource={faculties}
         pageSize={size}
         totalPages={meta?.total}
         showSizeChanger={true}
@@ -176,4 +178,4 @@ const StudentPage = () => {
   );
 };
 
-export default StudentPage;
+export default FacultyPage;

@@ -5,6 +5,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { getFromLocalStorage, setToLocalStorage } from "@/utils/local-storage";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
+import Form from "@/components/Forms/Form";
 interface ISteps {
   title?: string;
   content?: React.ReactElement | React.ReactNode;
@@ -41,7 +42,8 @@ const StepperForm = ({ steps, submitHandler, navigateLink }: IStepsProps) => {
   const formConfig: FromConfig = {};
   const methods = useForm<FromProps>(formConfig);
   const { handleSubmit, reset } = methods;
-  const handleStudentOnSubmit = (data: any) => {
+  const handleStudentSubmit = (data: any) => {
+    console.log(data);
     submitHandler(data);
     reset();
     setToLocalStorage("step", JSON.stringify({ step: 0 }));
@@ -51,7 +53,7 @@ const StepperForm = ({ steps, submitHandler, navigateLink }: IStepsProps) => {
     <>
       <Steps current={current} items={items} />
       <FormProvider {...methods}>
-        <form onSubmit={handleStudentOnSubmit}>
+        <Form SubmitHandler={handleStudentSubmit}>
           <div>{steps[current].content}</div>
           <div style={{ marginTop: 24 }}>
             {current < steps.length - 1 && (
@@ -74,7 +76,7 @@ const StepperForm = ({ steps, submitHandler, navigateLink }: IStepsProps) => {
               </Button>
             )}
           </div>
-        </form>
+        </Form>
       </FormProvider>
     </>
   );
