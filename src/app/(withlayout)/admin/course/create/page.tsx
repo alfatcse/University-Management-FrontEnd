@@ -26,7 +26,7 @@ const CreateCoursePage = () => {
 
   const onSubmit = async (data: any) => {
     data.credits = parseInt(data?.credits);
-
+    console.log(data);
     const coursePreRequisitesOptions = data?.coursePreRequisites?.map(
       (id: string) => {
         return {
@@ -34,12 +34,12 @@ const CreateCoursePage = () => {
         };
       }
     );
-
-    data.coursePreRequisites = coursePreRequisitesOptions;
-
+    data.preRequisiteCourses = coursePreRequisitesOptions;
+    const { coursePreRequisites, ...courses } = data;
     message.loading("Creating.....");
     try {
-      const res = await addCourse(data).unwrap();
+      console.log(courses);
+      const res = await addCourse(courses).unwrap();
       if (res?.id) {
         message.success("Course created successfully");
       }

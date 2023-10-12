@@ -3,17 +3,26 @@ import {
   DeleteOutlined,
   EditOutlined,
   ReloadOutlined,
+  PlayCircleOutlined,
 } from "@ant-design/icons";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import UMTable from "@/components/ui/UMTable";
-import { Button, Input, message } from "antd";
+
+import { Button, Input, Tooltip, message } from "antd";
 import Link from "next/link";
 import { useState } from "react";
 import ActionBar from "@/components/ui/ActionBar";
+
 import dayjs from "dayjs";
-import { useDeleteRoomMutation, useRoomsQuery } from "@/app/redux/api/roomApi";
 import { useDebounced } from "@/app/redux/hooks";
-const RoomPage = () => {
+import {
+  useDeleteSemesterRegistrationsMutation,
+  useSemesterRegistrationsQuery,
+  useStartNewSemesterMutation,
+} from "@/app/redux/api/semesterRegistrationApi";
+import { useRoomsQuery } from "@/app/redux/api/roomApi";
+
+const SemesterRegistrationPage = () => {
   const query: Record<string, any> = {};
 
   const [page, setPage] = useState<number>(1);
@@ -21,7 +30,10 @@ const RoomPage = () => {
   const [sortBy, setSortBy] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [deleteRoom] = useDeleteRoomMutation();
+  const [deleteSemesterRegistrations] =
+    useDeleteSemesterRegistrationsMutation();
+
+  const [startNewSemester] = useStartNewSemesterMutation();
 
   query["limit"] = size;
   query["page"] = page;
@@ -37,18 +49,26 @@ const RoomPage = () => {
   if (!!debouncedTerm) {
     query["searchTerm"] = debouncedTerm;
   }
-  const { data, isLoading } = useRoomsQuery({ ...query });
+  const { data, isLoading } = useSemesterRegistrationsQuery({ ...query });
   console.log(data);
-  const rooms = data?.rooms;
+  const semesterRegistrations = data?.semesterRegistrations;
   const meta = data?.meta;
+  const handleStartSemester = async (id: string) => {
+    try {
+      const res = await startNewSemester(id).unwrap();
+      message.success(res);
+    } catch (err: any) {
+      message.error(err?.message);
+    }
+  };
 
   const deleteHandler = async (id: string) => {
     message.loading("Deleting.....");
     try {
       //   console.log(data);
-      const res = await deleteRoom(id);
+      const res = await deleteSemesterRegistrations(id);
       if (res) {
-        message.success("Room Deleted successfully");
+        message.success("Semester Registration Deleted successfully");
       }
     } catch (err: any) {
       //   console.error(err.message);
@@ -58,18 +78,30 @@ const RoomPage = () => {
 
   const columns = [
     {
-      title: "Room no",
-      dataIndex: "roomNumber",
+      title: "Start Date",
+      dataIndex: "startDate",
+      render: function (data: any) {
+        return data && dayjs(data).format("MMM D, YYYY hh:mm A");
+      },
       sorter: true,
     },
     {
-      title: "Floor",
-      dataIndex: "floor",
+      title: "End Date",
+      dataIndex: "endDate",
+      render: function (data: any) {
+        return data && dayjs(data).format("MMM D, YYYY hh:mm A");
+      },
       sorter: true,
     },
     {
-      title: "Building",
-      dataIndex: "building",
+      title: "Status",
+      dataIndex: "status",
+      sorter: true,
+    },
+    {
+      title: "Academic semester",
+      dataIndex: "academicSemester",
+      sorter: true,
       render: function (data: any) {
         return <>{data?.title}</>;
       },
@@ -87,17 +119,29 @@ const RoomPage = () => {
       render: function (data: any) {
         return (
           <>
-            <Link href={`/admin/room/edit/${data?.id}`}>
+            <Link href={`/admin/semester-registration/edit/${data?.id}`}>
               <Button
                 style={{
                   margin: "0px 5px",
                 }}
-                onClick={() => console.log(data)}
                 type="primary"
               >
                 <EditOutlined />
               </Button>
             </Link>
+            {data?.status === "ENDED" && (
+              <Tooltip title="Start Semester" placement="bottom">
+                <Button
+                  type="primary"
+                  onClick={() => handleStartSemester(data?.id)}
+                  style={{
+                    margin: "0px 5px",
+                  }}
+                >
+                  <PlayCircleOutlined />
+                </Button>
+              </Tooltip>
+            )}
             <Button
               onClick={() => deleteHandler(data?.id)}
               type="primary"
@@ -140,7 +184,7 @@ const RoomPage = () => {
         ]}
       />
 
-      <ActionBar title="Room List">
+      <ActionBar title="Semester Registration List">
         <Input
           type="text"
           size="large"
@@ -153,7 +197,7 @@ const RoomPage = () => {
           }}
         />
         <div>
-          <Link href="/admin/room/create">
+          <Link href="/admin/semester-registration/create">
             <Button type="primary">Create</Button>
           </Link>
           {(!!sortBy || !!sortOrder || !!searchTerm) && (
@@ -171,7 +215,7 @@ const RoomPage = () => {
       <UMTable
         loading={isLoading}
         columns={columns}
-        dataSource={rooms}
+        dataSource={semesterRegistrations}
         pageSize={size}
         totalPages={meta?.total}
         showSizeChanger={true}
@@ -183,4 +227,4 @@ const RoomPage = () => {
   );
 };
 
-export default RoomPage;
+export default SemesterRegistrationPage;
