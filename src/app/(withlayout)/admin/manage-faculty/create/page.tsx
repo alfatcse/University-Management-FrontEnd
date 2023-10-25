@@ -106,6 +106,9 @@ const CreateFacultyPage = () => {
               <ACDepartmentField
                 name="faculty.academicDepartment"
                 label="Academic Department"
+                onChange={function (e: any): void {
+                  throw new Error("Function not implemented.");
+                }}
               />
             </Col>
 

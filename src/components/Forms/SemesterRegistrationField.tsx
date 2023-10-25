@@ -5,7 +5,6 @@ type SemesterRegistrationFieldProps = {
   label?: string;
   onChange: (e: any) => void;
 };
-
 const SemesterRegistrationField = ({
   name,
   label,
@@ -27,15 +26,14 @@ const SemesterRegistrationField = ({
       };
     }
   );
-
   return (
     <FormSelectField
       name={name}
       label={label}
       options={semesterRegistrationsOptions as SelectOptions[]}
+      placeholder="Select"
       handleChange={(e: any) => onChange(e)}
     />
   );
 };
-
 export default SemesterRegistrationField;

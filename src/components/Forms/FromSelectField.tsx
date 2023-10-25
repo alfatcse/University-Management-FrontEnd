@@ -25,7 +25,7 @@ const FromSelectField = ({
   label,
   defaultvalue,
   options,
-  placeholder,
+  placeholder = "Select",
   handleChange,
 }: SelectFieldProps) => {
   const { control } = useFormContext();

@@ -16,9 +16,7 @@ const CreateOfferedCourseSectionPage = () => {
   const [acDepartmentId, setAcDepartmentId] = useState<string>();
   const [semesterRegistrationId, setSemesterRegistrationId] =
     useState<string>();
-
   const query: Record<string, any> = {};
-
   if (!!acDepartmentId) {
     query["academicDepartmentId"] = acDepartmentId;
   }
@@ -30,7 +28,6 @@ const CreateOfferedCourseSectionPage = () => {
     page: 1,
     ...query,
   });
-
   const offeredCourses = data?.offeredCourses;
   const offeredCoursesOptions = offeredCourses?.map((offCourse: any) => {
     // console.log(offCourse?.course?.id);
@@ -39,7 +36,6 @@ const CreateOfferedCourseSectionPage = () => {
       value: offCourse?.id,
     };
   });
-
   const onSubmit = async (data: any) => {
     data.maxCapacity = parseInt(data?.maxCapacity);
     // console.log(data);
@@ -107,5 +103,4 @@ const CreateOfferedCourseSectionPage = () => {
     </div>
   );
 };
-
 export default CreateOfferedCourseSectionPage;

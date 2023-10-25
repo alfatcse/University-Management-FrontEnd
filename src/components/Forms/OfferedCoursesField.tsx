@@ -8,7 +8,7 @@ type MultiSelectFieldProps = {
 const OfferedCoursesField = ({ name, label }: MultiSelectFieldProps) => {
   const { data, isLoading } = useCoursesQuery({ limit: 10, page: 1 });
   const courses = data?.courses;
-  console.log("Cour", courses);
+
   const coursesOptions = courses?.map((course) => {
     return {
       label: course?.title,
