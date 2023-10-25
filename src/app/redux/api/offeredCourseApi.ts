@@ -12,11 +12,10 @@ export const offeredCourseApi = baseApi.injectEndpoints({
           params: arg,
         };
       },
-      transformResponse: (response: IOfferedCourse, meta: IMeta) => {
-        console.log(response);
+      transformResponse: (response: IOfferedCourse[], meta: IMeta) => {
         return {
-          offeredCourses: response?.data,
-          meta: response?.meta,
+          offeredCourses: response,
+          meta,
         };
       },
       providesTags: [tagTypes.offeredCourse],

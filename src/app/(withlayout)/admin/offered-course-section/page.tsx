@@ -10,14 +10,11 @@ import { Button, Input, message } from "antd";
 import Link from "next/link";
 import { useState } from "react";
 import ActionBar from "@/components/ui/ActionBar";
-import { useDebounced } from "@/app/redux/hooks";
 import dayjs from "dayjs";
-import {} from "@/app/redux/api/courseApi";
-import {
-  useDeleteOfferedCourseMutation,
-  useOfferedCoursesQuery,
-} from "@/app/redux/api/offeredCourseApi";
-const OfferedCoursePage = () => {
+import { useDeleteOfferedCourseMutation } from "@/app/redux/api/offeredCourseApi";
+import { useDebounced } from "@/app/redux/hooks";
+import { useOfferedCourseSectionsQuery } from "@/app/redux/api/offeredCourseSectionApi";
+const OfferedCourseSectionPage = () => {
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
@@ -34,11 +31,13 @@ const OfferedCoursePage = () => {
     searchQuery: searchTerm,
     delay: 600,
   });
+
   if (!!debouncedTerm) {
     query["searchTerm"] = debouncedTerm;
   }
-  const { data, isLoading } = useOfferedCoursesQuery({ ...query });
-  const offeredCourses = data?.offeredCourses;
+  const { data, isLoading } = useOfferedCourseSectionsQuery({ ...query });
+  console.log(data);
+  const offeredCourseSections = data?.offeredCourseSections;
   const meta = data?.meta;
   const deleteHandler = async (id: string) => {
     message.loading("Deleting.....");
@@ -46,29 +45,37 @@ const OfferedCoursePage = () => {
       //   console.log(data);
       const res = await deleteOfferedCourse(id);
       if (res) {
-        message.success("Offered Course Deleted successfully");
+        message.success("Course section deleted successfully");
       }
     } catch (err: any) {
       //   console.error(err.message);
       message.error(err.message);
     }
   };
+
   const columns = [
     {
-      title: "Course",
-      dataIndex: "course",
+      title: "Offered courses",
+      dataIndex: "offeredCourse",
       sorter: true,
       render: function (data: any) {
-        return <>{data?.title}</>;
+        return <>{data?.course?.title}</>;
       },
     },
     {
-      title: "Academic department",
-      dataIndex: "academicDepartment",
+      title: "Section",
+      dataIndex: "title",
       sorter: true,
-      render: function (data: any) {
-        return <>{data?.title}</>;
-      },
+    },
+    {
+      title: "max capacity",
+      dataIndex: "maxCapacity",
+      sorter: true,
+    },
+    {
+      title: "Currently enrolled Student",
+      dataIndex: "currentlyEnrolledStudent",
+      sorter: true,
     },
     {
       title: "CreatedAt",
@@ -108,6 +115,7 @@ const OfferedCoursePage = () => {
   ];
 
   const onPaginationChange = (page: number, pageSize: number) => {
+    console.log("Page:", page, "PageSize:", pageSize);
     setPage(page);
     setSize(pageSize);
   };
@@ -135,7 +143,7 @@ const OfferedCoursePage = () => {
         ]}
       />
 
-      <ActionBar title="Offered Course List">
+      <ActionBar title="Course Section List">
         <Input
           type="text"
           size="large"
@@ -148,7 +156,7 @@ const OfferedCoursePage = () => {
           }}
         />
         <div>
-          <Link href="/admin/offered-course/create">
+          <Link href="/admin/offered-course-section/create">
             <Button type="primary">Create</Button>
           </Link>
           {(!!sortBy || !!sortOrder || !!searchTerm) && (
@@ -166,7 +174,7 @@ const OfferedCoursePage = () => {
       <UMTable
         loading={isLoading}
         columns={columns}
-        dataSource={offeredCourses}
+        dataSource={offeredCourseSections}
         pageSize={size}
         totalPages={meta?.total}
         showSizeChanger={true}
@@ -178,4 +186,4 @@ const OfferedCoursePage = () => {
   );
 };
 
-export default OfferedCoursePage;
+export default OfferedCourseSectionPage;

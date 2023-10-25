@@ -11,7 +11,6 @@ import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import { Button, Col, Row, message } from "antd";
 const CreateOfferedCoursePage = () => {
   const [addOfferedCourse] = useAddOfferedCourseMutation();
-
   const { data, isLoading } = useSemesterRegistrationsQuery({
     limit: 10,
     page: 1,
@@ -66,6 +65,9 @@ const CreateOfferedCoursePage = () => {
               <ACDepartmentField
                 name="academicDepartmentId"
                 label="Academic department"
+                onChange={function (e: any): void {
+                  throw new Error("Function not implemented.");
+                }}
               />
             </div>
           </Col>

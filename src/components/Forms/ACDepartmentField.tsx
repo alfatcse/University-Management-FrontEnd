@@ -3,8 +3,13 @@ import FormSelectField, { SelectOptions } from "./FromSelectField";
 type ACDepartmentFieldProps = {
   name: string;
   label: string;
+  onChange: (e: any) => void;
 };
-const ACDepartmentField = ({ name, label }: ACDepartmentFieldProps) => {
+const ACDepartmentField = ({
+  name,
+  label,
+  onChange,
+}: ACDepartmentFieldProps) => {
   const { data, isLoading } = useAcademicDepartmentsQuery({
     limit: 100,
     page: 1,
@@ -21,6 +26,7 @@ const ACDepartmentField = ({ name, label }: ACDepartmentFieldProps) => {
       name={name}
       label={label}
       options={acDepartmentOptions as SelectOptions[]}
+      handleChange={(e) => onChange(e)}
     />
   );
 };
