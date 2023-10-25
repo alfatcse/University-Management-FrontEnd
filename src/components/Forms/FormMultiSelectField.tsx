@@ -28,7 +28,7 @@ const FormMultiSelectField = ({
   defaultValue,
 }: SelectFieldProps) => {
   const { control } = useFormContext();
-
+  console.log(options);
   return (
     <>
       {label ? label : null}
@@ -45,6 +45,7 @@ const FormMultiSelectField = ({
             placeholder={placeholder}
             allowClear
             mode="multiple"
+            showSearch={true}
           />
         )}
       />

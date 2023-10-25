@@ -203,16 +203,20 @@ export interface IAcademicCoreDepartment {
 }
 
 export interface IOfferedCourse {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt?: null;
-  courseId: string;
-  semesterRegistrationId: string;
-  academicDepartmentId: string;
-  semesterRegistration: ISemesterRegistration;
-  course: ICourse;
-  academicDepartment: IAcademicCoreDepartment;
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt?: null;
+    courseId: string;
+    semesterRegistrationId: string;
+    academicDepartmentId: string;
+    semesterRegistration: ISemesterRegistration;
+    course: ICourse;
+    academicDepartment: IAcademicCoreDepartment;
+  };
+
+  meta: IMeta;
 }
 
 export interface IAcademicCoreFaculty {

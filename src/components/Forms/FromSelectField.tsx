@@ -13,6 +13,7 @@ type SelectFieldProps = {
   label?: string;
   placeholder?: string;
   defaultvalue?: SelectOptions;
+  handleChange?: (el: string) => void;
 };
 import { Input, Select } from "antd";
 import { Controller, useFormContext } from "react-hook-form";
@@ -25,6 +26,7 @@ const FromSelectField = ({
   defaultvalue,
   options,
   placeholder,
+  handleChange,
 }: SelectFieldProps) => {
   const { control } = useFormContext();
   return (
@@ -35,8 +37,8 @@ const FromSelectField = ({
         name={name}
         render={({ field: { value, onChange } }) => (
           <Select
+            onChange={handleChange ? handleChange : onChange}
             size={size}
-            onChange={onChange}
             options={options}
             style={{
               width: "100%",

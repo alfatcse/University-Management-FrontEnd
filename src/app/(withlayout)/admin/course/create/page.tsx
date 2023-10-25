@@ -13,9 +13,7 @@ import { Button, Col, Row, message } from "antd";
 import FormMultiSelectField from "@/components/Forms/FormMultiSelectField";
 const CreateCoursePage = () => {
   const [addCourse] = useAddCourseMutation();
-
   const { data, isLoading } = useCoursesQuery({ limit: 10, page: 1 });
-
   const courses = data?.courses;
   const coursesOptions = courses?.map((course) => {
     return {
@@ -23,7 +21,6 @@ const CreateCoursePage = () => {
       value: course?.id,
     };
   });
-
   const onSubmit = async (data: any) => {
     data.credits = parseInt(data?.credits);
     console.log(data);
