@@ -59,9 +59,6 @@ const CreateOfferedCoursePage = () => {
               />
             </div>
             <div style={{ margin: "10px 0px" }}>
-              <OfferedCoursesField name="courseIds" label="Courses" />
-            </div>
-            <div style={{ margin: "10px 0px" }}>
               <ACDepartmentField
                 name="academicDepartmentId"
                 label="Academic department"
@@ -69,6 +66,9 @@ const CreateOfferedCoursePage = () => {
                   throw new Error("Function not implemented.");
                 }}
               />
+            </div>
+            <div style={{ margin: "10px 0px" }}>
+              <OfferedCoursesField name="courseIds" label="Courses" />
             </div>
           </Col>
         </Row>

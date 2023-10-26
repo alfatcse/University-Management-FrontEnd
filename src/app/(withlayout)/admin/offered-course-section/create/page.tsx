@@ -11,6 +11,7 @@ import FromInput from "@/components/Forms/FromInput";
 import FormSelectField, {
   SelectOptions,
 } from "@/components/Forms/FromSelectField";
+import FormDynamicFields from "@/components/ui/FormDynamicFields";
 const CreateOfferedCourseSectionPage = () => {
   const [addOfferedCourseSection] = useAddOfferedCourseSectionMutation();
   const [acDepartmentId, setAcDepartmentId] = useState<string>();
@@ -97,7 +98,9 @@ const CreateOfferedCourseSectionPage = () => {
               add
             </Button>
           </Col>
-          <Col span={16} style={{ margin: "10px 0" }}></Col>
+          <Col span={16} style={{ margin: "10px 0" }}>
+            <FormDynamicFields />
+          </Col>
         </Row>
       </Form>
     </div>
