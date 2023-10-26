@@ -1,11 +1,10 @@
 import { useAcademicSemestersQuery } from "@/app/redux/api/academic/semesterApi";
 import FromSelectField, { SelectOptions } from "./FromSelectField";
-type ACFacultyFieldProps = {
+type ACSemesterFieldProps = {
   name: string;
   label: string;
 };
-
-const ACSemesterField = ({ name, label }: ACFacultyFieldProps) => {
+const ACSemesterField = ({ name, label }: ACSemesterFieldProps) => {
   const { data, isLoading } = useAcademicSemestersQuery({
     limit: 100,
     page: 1,

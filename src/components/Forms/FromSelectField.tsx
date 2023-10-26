@@ -39,6 +39,7 @@ const FromSelectField = ({
           <Select
             onChange={handleChange ? handleChange : onChange}
             size={size}
+            value={value}
             options={options}
             style={{
               width: "100%",

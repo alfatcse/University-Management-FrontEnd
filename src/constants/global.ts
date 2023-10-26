@@ -125,3 +125,8 @@ export const daysOptions = days.map((day: string) => {
     value: day,
   };
 });
+export const semesterRegistrationStatus = ["UPCOMING", "ONGOING", "ENDED"];
+export enum ExamType {
+  FINAL = "FINAL",
+  MIDTERM = "MIDTERM",
+}
