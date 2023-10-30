@@ -1,9 +1,9 @@
-import { IFaculty, IMeta } from "@/types";
+import { ICoreFaculty, IFaculty, IFacultyCourse, IMeta } from "@/types";
 import { baseApi } from "./baseApi";
 import { tagTypes } from "../tag-types";
-import { getUserInfo } from "@/services/auth.service";
+
 const BASE_FACULTY_API_URL = "/faculties";
-const auth = getUserInfo();
+
 export const facultyApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // get all faculty user endpoint
@@ -13,18 +13,12 @@ export const facultyApi = baseApi.injectEndpoints({
           url: BASE_FACULTY_API_URL,
           method: "GET",
           params: arg,
-          headers: {
-            authorization: auth, // Include the authorization token in the header
-          },
         };
       },
       transformResponse: (response: IFaculty[], meta: IMeta) => {
         return {
           faculties: response,
           meta,
-          headers: {
-            authorization: auth, // Include the authorization token in the header
-          },
         };
       },
       providesTags: [tagTypes.faculty],
@@ -34,9 +28,6 @@ export const facultyApi = baseApi.injectEndpoints({
       query: (id: string | string[] | undefined) => ({
         url: `${BASE_FACULTY_API_URL}/profile/${id}`,
         method: "GET",
-        headers: {
-          authorization: auth, // Include the authorization token in the header
-        },
       }),
       providesTags: [tagTypes.faculty],
     }),
@@ -47,9 +38,6 @@ export const facultyApi = baseApi.injectEndpoints({
         method: "POST",
         data,
         contentType: "multipart/form-data",
-        headers: {
-          authorization: auth, // Include the authorization token in the header
-        },
       }),
       invalidatesTags: [tagTypes.faculty],
     }),
@@ -59,9 +47,6 @@ export const facultyApi = baseApi.injectEndpoints({
         url: `${BASE_FACULTY_API_URL}/${data.id}`,
         method: "PATCH",
         data: data.body,
-        headers: {
-          authorization: auth, // Include the authorization token in the header
-        },
       }),
       invalidatesTags: [tagTypes.faculty],
     }),
@@ -70,11 +55,43 @@ export const facultyApi = baseApi.injectEndpoints({
       query: (id) => ({
         url: `${BASE_FACULTY_API_URL}/${id}`,
         method: "DELETE",
-        headers: {
-          authorization: auth, // Include the authorization token in the header
-        },
       }),
       invalidatesTags: [tagTypes.faculty],
+    }),
+
+    facultyCourses: build.query({
+      query: (arg: Record<string, any>) => {
+        return {
+          url: `${BASE_FACULTY_API_URL}/my-courses`,
+          method: "GET",
+          params: arg,
+        };
+      },
+      transformResponse: (response: IFacultyCourse[], meta: IMeta) => {
+        console.log(response);
+        return {
+          myCourses: response,
+          meta,
+        };
+      },
+      providesTags: [tagTypes.student],
+    }),
+
+    facultyCourseStudents: build.query({
+      query: (arg: Record<string, any>) => {
+        return {
+          url: `${BASE_FACULTY_API_URL}/my-course-students`,
+          method: "GET",
+          params: arg,
+        };
+      },
+      transformResponse: (response: ICoreFaculty[], meta: IMeta) => {
+        return {
+          myCourseStudents: response,
+          meta,
+        };
+      },
+      providesTags: [tagTypes.student],
     }),
   }),
 });
@@ -85,4 +102,7 @@ export const {
   useFacultyQuery, // get single faculty user hook
   useUpdateFacultyMutation, // update single faculty user hook
   useDeleteFacultyMutation, // delete single faculty user hook
+
+  useFacultyCoursesQuery,
+  useFacultyCourseStudentsQuery,
 } = facultyApi;

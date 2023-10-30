@@ -19,6 +19,7 @@ const StudentRegistrationPage = () => {
     }
     router.push("/student/pre-registration");
   };
+  console.log(data);
   return (
     <>
       <div style={{ margin: "10px 0px" }}>

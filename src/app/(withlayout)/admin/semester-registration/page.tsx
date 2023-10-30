@@ -7,12 +7,10 @@ import {
 } from "@ant-design/icons";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import UMTable from "@/components/ui/UMTable";
-
 import { Button, Input, Tooltip, message } from "antd";
 import Link from "next/link";
 import { useState } from "react";
 import ActionBar from "@/components/ui/ActionBar";
-
 import dayjs from "dayjs";
 import { useDebounced } from "@/app/redux/hooks";
 import {
@@ -20,11 +18,8 @@ import {
   useSemesterRegistrationsQuery,
   useStartNewSemesterMutation,
 } from "@/app/redux/api/semesterRegistrationApi";
-import { useRoomsQuery } from "@/app/redux/api/roomApi";
-
 const SemesterRegistrationPage = () => {
   const query: Record<string, any> = {};
-
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [sortBy, setSortBy] = useState<string>("");
@@ -32,9 +27,7 @@ const SemesterRegistrationPage = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [deleteSemesterRegistrations] =
     useDeleteSemesterRegistrationsMutation();
-
   const [startNewSemester] = useStartNewSemesterMutation();
-
   query["limit"] = size;
   query["page"] = page;
   query["sortBy"] = sortBy;
@@ -50,7 +43,6 @@ const SemesterRegistrationPage = () => {
     query["searchTerm"] = debouncedTerm;
   }
   const { data, isLoading } = useSemesterRegistrationsQuery({ ...query });
-  console.log(data);
   const semesterRegistrations = data?.semesterRegistrations;
   const meta = data?.meta;
   const handleStartSemester = async (id: string) => {

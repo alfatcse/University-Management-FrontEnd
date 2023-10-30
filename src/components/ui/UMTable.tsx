@@ -1,6 +1,5 @@
 "use client";
 import { Table } from "antd";
-import { boolean } from "yup";
 type UMTableProps = {
   columns: any;
   loading?: boolean;

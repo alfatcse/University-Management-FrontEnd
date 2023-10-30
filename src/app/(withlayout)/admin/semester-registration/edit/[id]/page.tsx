@@ -12,9 +12,7 @@ import { semesterRegistrationStatus } from "@/constants/global";
 import FromInput from "@/components/Forms/FromInput";
 import { Button, Col, Row, message } from "antd";
 import dayjs from "dayjs";
-import FormSelectField, {
-  SelectOptions,
-} from "@/components/Forms/FromSelectField";
+import FormSelectField from "@/components/Forms/FromSelectField";
 const EditSemesterRegistration = ({ params }: { params: any }) => {
   const { id } = params;
   const { data, isLoading } = useSemesterRegistrationQuery(id);
@@ -62,14 +60,16 @@ const EditSemesterRegistration = ({ params }: { params: any }) => {
       }
       return el;
     });
-  const defaultValues = {
+
+  let defaultValues = {
     startDate: data?.startDate || "",
     endDate: data?.endDate || "",
     academicSemesterId: data?.academicSemesterId || "",
-    minCredit: data?.minCredit || "",
+    minCredit: data?.minCredit ?? "",
     maxCredit: data?.maxCredit || "",
     status: data?.status || "",
   };
+
   return (
     <>
       <UMBreadCrumb
@@ -100,11 +100,9 @@ const EditSemesterRegistration = ({ params }: { params: any }) => {
             <div style={{ margin: "10px 0px" }}>
               <FromInput type="number" name="minCredit" label="min credit" />
             </div>
-
             <div style={{ margin: "10px 0px" }}>
               <FromInput type="number" name="maxCredit" label="max credit" />
             </div>
-
             <div style={{ margin: "10px 0px" }}>
               <FormSelectField
                 options={statusOptions}
