@@ -15,7 +15,13 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.admin],
     }),
-
+    admin: build.query({
+      query: (id: string | string[] | undefined) => ({
+        url: `${ADMIN_URL}/profile/${id}`,
+        method: "GET",
+      }),
+      providesTags: [tagTypes.admin],
+    }),
     admins: build.query({
       query: (arg: Record<string, any>) => {
         return {
@@ -35,4 +41,8 @@ export const adminApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useAdminsQuery, useAddAdminWithFormDataMutation } = adminApi;
+export const {
+  useAdminsQuery,
+  useAddAdminWithFormDataMutation,
+  useAdminQuery,
+} = adminApi;

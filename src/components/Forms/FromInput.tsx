@@ -8,6 +8,7 @@ interface IInput {
   placeholder?: string;
   validation?: object;
   label?: string;
+  required?: boolean;
 }
 import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 import { Input } from "antd";
@@ -21,6 +22,7 @@ const FromInput = ({
   placeholder,
   validation,
   label,
+  required,
 }: IInput) => {
   const {
     control,
@@ -30,6 +32,7 @@ const FromInput = ({
   return (
     <>
       {label ? label : null}
+      {required ? <span style={{ color: "red" }}>*</span> : null}
       <Controller
         control={control}
         name={name}

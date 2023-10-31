@@ -12,6 +12,8 @@ import {
 } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { useUserLoginMutation } from "@/app/redux/api/authApi";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginSchema } from "@/schemas/login";
 type FormValues = {
   id: string;
   password: string;
@@ -55,13 +57,19 @@ const LoginPage = () => {
           First Login your Account
         </h1>
         <div>
-          <Form SubmitHandler={onSubmit}>
+          <Form SubmitHandler={onSubmit} resolver={yupResolver(loginSchema)}>
             <div
               style={{
                 margin: "15px 0px",
               }}
             >
-              <FromInput name="id" type="text" size="large" label="User Id" />
+              <FromInput
+                name="id"
+                type="text"
+                size="large"
+                label="User Id"
+                required
+              />
             </div>
             <div
               style={{
@@ -73,6 +81,7 @@ const LoginPage = () => {
                 type="password"
                 size="large"
                 label="User Password"
+                required
               />
             </div>
             <Button type="primary" htmlType="submit">
