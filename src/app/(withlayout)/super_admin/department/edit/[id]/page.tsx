@@ -34,6 +34,7 @@ const EditDepartmentPage = ({ params }: IDProps) => {
       message.error("Something went Wrong!", err.message);
     }
   };
+
   return (
     <div>
       <UMBreadCrumb

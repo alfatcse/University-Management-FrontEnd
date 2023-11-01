@@ -22,7 +22,6 @@ const UMTable = ({
   onTableChange,
   showPagination = true,
 }: UMTableProps) => {
-  console.log("dataSource::", dataSource);
   const paginationConfig = showPagination
     ? {
         pageSize: pageSize,

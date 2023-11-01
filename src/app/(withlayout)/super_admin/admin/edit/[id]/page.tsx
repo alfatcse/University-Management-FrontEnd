@@ -11,11 +11,16 @@ import { adminSchema } from "@/schemas/admin";
 import { IDepartment } from "@/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Col, Row, message } from "antd";
-import { useAddAdminWithFormDataMutation } from "@/app/redux/api/adminApi";
+import {
+  useAddAdminWithFormDataMutation,
+  useAdminQuery,
+  useUpdateAdminMutation,
+} from "@/app/redux/api/adminApi";
 import { useDepartmentsQuery } from "@/app/redux/api/departmentApi";
-const EditAdminPage = () => {
-  const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
-  const [addAdminWithFormData] = useAddAdminWithFormDataMutation();
+const EditAdminPage = ({ params }: any) => {
+  const { data: adminData, isLoading: loading } = useAdminQuery(params?.id);
+  const { data } = useDepartmentsQuery({ limit: 100, page: 1 });
+  const [updateAdmin, isLoading] = useUpdateAdminMutation();
   //@ts-ignore
   const departments: IDepartment[] = data?.departments;
   const departmentOptions =
@@ -26,26 +31,36 @@ const EditAdminPage = () => {
         value: department?.id,
       };
     });
-
   const onSubmit = async (values: any) => {
-    console.log(values);
-    const obj = { ...values };
-    const file = obj["file"];
-    delete obj["file"];
-    const data = JSON.stringify(obj);
-    const formData = new FormData();
-    formData.append("file", file as Blob);
-    formData.append("data", data);
     message.loading("Editing...");
     try {
-      const result = await addAdminWithFormData(formData);
-      console.log(result);
-      message.success("Admin created successfully!");
+      const res = await updateAdmin({ id: params?.id, body: values }).unwrap();
+      console.log(res);
+      if (res && !isLoading) {
+        message.success("Admin Successfully Updated");
+      } else if (isLoading) {
+      }
     } catch (err: any) {
       console.error(err.message);
     }
   };
-
+  const defaultValues = {
+    name: {
+      firstName: adminData?.name?.firstName || "",
+      lastName: adminData?.name?.lastName || "",
+      middleName: adminData?.name?.middleName || "",
+    },
+    dateOfBirth: adminData?.dateOfBirth || "",
+    email: adminData?.email || "",
+    designation: adminData?.designation || "",
+    contactNo: adminData?.contactNo || "",
+    emergencyContactNo: adminData?.emergencyContactNo || "",
+    permanentAddress: adminData?.permanentAddress || "",
+    presentAddress: adminData?.presentAddress || "",
+    bloodGroup: adminData?.bloodGroup || "",
+    gender: adminData?.gender || "",
+    managementDepartment: adminData?.managementDepartment?.id || "",
+  };
   return (
     <div>
       <UMBreadCrumb
@@ -60,10 +75,10 @@ const EditAdminPage = () => {
           },
         ]}
       />
-      <h1>Edit Admin</h1>
+      <h1>Edit Admin {params?.id}</h1>
 
       <div>
-        <Form SubmitHandler={onSubmit} resolver={yupResolver(adminSchema)}>
+        <Form SubmitHandler={onSubmit} defaultValues={defaultValues}>
           <div
             style={{
               border: "1px solid #d9d9d9",
@@ -90,7 +105,7 @@ const EditAdminPage = () => {
               >
                 <FormInput
                   type="text"
-                  name="admin.name.firstName"
+                  name="name.firstName"
                   size="large"
                   label="First Name"
                 />
@@ -104,7 +119,7 @@ const EditAdminPage = () => {
               >
                 <FormInput
                   type="text"
-                  name="admin.name.middleName"
+                  name="name.middleName"
                   size="large"
                   label="Middle Name"
                 />
@@ -118,25 +133,12 @@ const EditAdminPage = () => {
               >
                 <FormInput
                   type="text"
-                  name="admin.name.lastName"
+                  name="name.lastName"
                   size="large"
                   label="Last Name"
                 />
               </Col>
-              <Col
-                className="gutter-row"
-                span={8}
-                style={{
-                  marginBottom: "10px",
-                }}
-              >
-                <FormInput
-                  type="password"
-                  name="password"
-                  size="large"
-                  label="Password"
-                />
-              </Col>
+
               <Col
                 className="gutter-row"
                 span={8}
@@ -146,7 +148,7 @@ const EditAdminPage = () => {
               >
                 <FormSelectField
                   size="large"
-                  name="admin.gender"
+                  name="gender"
                   options={genderOptions}
                   label="Gender"
                   placeholder="Select"
@@ -161,20 +163,11 @@ const EditAdminPage = () => {
               >
                 <FormSelectField
                   size="large"
-                  name="admin.managementDepartment"
+                  name="managementDepartment"
                   options={departmentOptions}
                   label="Department"
                   placeholder="Select"
                 />
-              </Col>
-              <Col
-                className="gutter-row"
-                span={8}
-                style={{
-                  marginBottom: "10px",
-                }}
-              >
-                <UploadImage name="file" />
               </Col>
             </Row>
           </div>
@@ -206,7 +199,7 @@ const EditAdminPage = () => {
               >
                 <FormInput
                   type="email"
-                  name="admin.email"
+                  name="email"
                   size="large"
                   label="Email address"
                 />
@@ -220,7 +213,7 @@ const EditAdminPage = () => {
               >
                 <FormInput
                   type="text"
-                  name="admin.contactNo"
+                  name="contactNo"
                   size="large"
                   label="Contact No."
                 />
@@ -234,7 +227,7 @@ const EditAdminPage = () => {
               >
                 <FormInput
                   type="text"
-                  name="admin.emergencyContactNo"
+                  name="emergencyContactNo"
                   size="large"
                   label="Emergency Contact No."
                 />
@@ -247,7 +240,7 @@ const EditAdminPage = () => {
                 }}
               >
                 <FormDatePicker
-                  name="admin.dateOfBirth"
+                  name="dateOfBirth"
                   label="Date of birth"
                   size="large"
                 />
@@ -261,7 +254,7 @@ const EditAdminPage = () => {
               >
                 <FormSelectField
                   size="large"
-                  name="admin.bloodGroup"
+                  name="bloodGroup"
                   options={BloodGroup}
                   label="Blood group"
                   placeholder="Select"
@@ -276,14 +269,14 @@ const EditAdminPage = () => {
               >
                 <FormInput
                   type="text"
-                  name="admin.designation"
+                  name="designation"
                   size="large"
                   label="Designation"
                 />
               </Col>
               <Col span={12} style={{ margin: "10px 0" }}>
                 <FormTextArea
-                  name="admin.presentAddress"
+                  name="presentAddress"
                   label="Present address"
                   rows={4}
                 />
@@ -291,7 +284,7 @@ const EditAdminPage = () => {
 
               <Col span={12} style={{ margin: "10px 0" }}>
                 <FormTextArea
-                  name="admin.permanentAddress"
+                  name="permanentAddress"
                   label="Permanent address"
                   rows={4}
                 />
