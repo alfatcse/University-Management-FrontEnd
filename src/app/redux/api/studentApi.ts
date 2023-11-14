@@ -85,6 +85,7 @@ export const studentApi = baseApi.injectEndpoints({
         };
       },
       transformResponse: (response: IMyCourse[], meta: IMeta) => {
+        console.log("Resss", response);
         return {
           myCourses: response,
           meta,
