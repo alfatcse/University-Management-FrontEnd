@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useUserLoginMutation } from "@/app/redux/api/authApi";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "@/schemas/login";
+import Link from "next/link";
 type FormValues = {
   id: string;
   password: string;
@@ -83,6 +84,9 @@ const LoginPage = () => {
                 label="User Password"
                 required
               />
+              <div style={{ marginLeft: "auto" }}>
+                <Link href="/forgot-password">forgot password?</Link>
+              </div>
             </div>
             <Button type="primary" htmlType="submit">
               Log In
