@@ -8,11 +8,11 @@ import UMTable from "@/components/ui/UMTable";
 import Link from "next/link";
 import { useDebounced } from "@/app/redux/hooks";
 import { useFacultyCourseStudentsQuery } from "@/app/redux/api/facultyApi";
-const FacultyCoursesStudentsPage = ({ searchParams }: Record<string, any>) => {
+const FacultyCoursesStudentsPage = ({ searchParams }: any) => {
   //   console.log(searchParams);
   const { courseId, offeredCourseSectionId } = searchParams;
 
-  const query: Record<string, any> = {};
+  const query: { [key: string]: any } = {};
 
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);

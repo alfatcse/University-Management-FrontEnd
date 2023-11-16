@@ -15,7 +15,7 @@ import {
   useStudentEnrolledCourseMarksQuery,
   useUpdateFinalMarksMutation,
 } from "@/app/redux/api/studentEnrollCourseMarkApi";
-const StudentResultPage = ({ searchParams }: Record<string, any>) => {
+const StudentResultPage = ({ searchParams }: any) => {
   const [updateFinalMarks] = useUpdateFinalMarksMutation();
   const [academicSemesterId, setAcademicSemesterId] = useState<string>();
   const query: Record<string, any> = {};

@@ -5,7 +5,7 @@ import ActionBar from "@/components/ui/ActionBar";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import { Button, Col, Row, message } from "antd";
 import FromInput from "@/components/Forms/FromInput";
-const UpdateMarksPage = ({ searchParams }: Record<string, any>) => {
+const UpdateMarksPage = ({ searchParams }: any) => {
   const {
     examType,
     marks,
