@@ -102,7 +102,6 @@ export const {
   useFacultyQuery, // get single faculty user hook
   useUpdateFacultyMutation, // update single faculty user hook
   useDeleteFacultyMutation, // delete single faculty user hook
-
   useFacultyCoursesQuery,
   useFacultyCourseStudentsQuery,
 } = facultyApi;
